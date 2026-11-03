@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f4f1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kanban">
+<title>Kanban</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <nav class="tabs" id="tabs" aria-label="Boards"></nav>
+  <button class="icon-btn" id="add-board" type="button" aria-label="New board" title="New board">+</button>
+  <button class="icon-btn" id="board-menu" type="button" aria-label="Board options" title="Board options">⋯</button>
+</header>
+
+<div class="banner" id="offline" hidden>Offline: showing the last saved copy, editing is paused.</div>
+
+<main class="cards" id="cards"></main>
+
+<section class="login" id="login" hidden>
+  <form class="login-box" id="login-form">
+    <h1>Kanban</h1>
+    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required>
+    <button type="submit">Log in</button>
+    <p class="login-error" id="login-error" hidden></p>
+  </form>
+</section>
+
+<dialog class="sheet" id="sheet"></dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script src="vendor/sortable.min.js"></script>
+<script src="vendor/morphdom.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

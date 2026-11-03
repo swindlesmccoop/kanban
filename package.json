@@ -1,0 +1,16 @@
+{
+  "name": "kanban",
+  "version": "1.0.0",
+  "description": "Self-hosted kanban: boards of cards holding tasks and subtasks, stored as JSON",
+  "private": true,
+  "type": "commonjs",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "morphdom": "^2.7.4",
+    "sortablejs": "^1.15.6"
+  }
+}

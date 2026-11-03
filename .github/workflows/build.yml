@@ -1,0 +1,43 @@
+name: Build image
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - Dockerfile
+      - package.json
+      - package-lock.json
+      - server/**
+      - public/**
+      - examples/**
+      - .github/workflows/build.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/swindlesmccoop/kanban:latest
+            ghcr.io/swindlesmccoop/kanban:sha-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

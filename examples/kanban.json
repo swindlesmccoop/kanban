@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "boards": [
+    {
+      "id": "b0welcome",
+      "name": "Welcome",
+      "cards": [
+        {
+          "id": "c0start",
+          "title": "Start here",
+          "notes": "A card is a list. Click any text to edit it.\nThis note spans two lines; click it to edit.",
+          "color": "blue",
+          "tasks": [
+            { "id": "t0start1", "text": "Tick this task off", "done": false, "subtasks": [] },
+            { "id": "t0start2", "text": "Add a task with the + at the bottom of a card", "done": false, "subtasks": [] },
+            { "id": "t0start3", "text": "This one is already done", "done": true, "subtasks": [] }
+          ]
+        },
+        {
+          "id": "c0subs",
+          "title": "Tasks and subtasks",
+          "notes": "Ticking every subtask ticks the task, and ticking a task ticks all of its subtasks.",
+          "color": "green",
+          "tasks": [
+            {
+              "id": "t0subs1",
+              "text": "Plan a weekend trip",
+              "done": false,
+              "subtasks": [
+                { "id": "s0subs1a", "text": "Pick a destination", "done": true },
+                { "id": "s0subs1b", "text": "Book a place to stay", "done": false },
+                { "id": "s0subs1c", "text": "Pack a bag", "done": false }
+              ]
+            },
+            {
+              "id": "t0subs2",
+              "text": "Everything under this one is finished",
+              "done": true,
+              "subtasks": [
+                { "id": "s0subs2a", "text": "Subtask one", "done": true },
+                { "id": "s0subs2b", "text": "Subtask two", "done": true }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c0drag",
+          "title": "Drag things around",
+          "notes": "",
+          "color": "purple",
+          "tasks": [
+            { "id": "t0drag1", "text": "Drag cards by their title to reorder them", "done": false, "subtasks": [] },
+            { "id": "t0drag2", "text": "Drag tasks between cards using the dotted handle", "done": false, "subtasks": [] },
+            { "id": "t0drag3", "text": "Drag subtasks between tasks the same way", "done": false, "subtasks": [] },
+            { "id": "t0drag4", "text": "Drag the board tabs along the top to reorder them", "done": false, "subtasks": [] }
+          ]
+        },
+        {
+          "id": "c0menu",
+          "title": "The ⋯ menu",
+          "notes": "Open it on any card to add notes, pick a colour, send the card to another board, or clear completed tasks.",
+          "color": "orange",
+          "tasks": [
+            { "id": "t0menu1", "text": "Try the colour swatches", "done": false, "subtasks": [] },
+            { "id": "t0menu2", "text": "Send this card to the Projects board", "done": false, "subtasks": [] },
+            { "id": "t0menu3", "text": "Done: use Clear completed to remove me", "done": true, "subtasks": [] },
+            { "id": "t0menu4", "text": "Done: and me", "done": true, "subtasks": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b0projects",
+      "name": "Projects",
+      "cards": [
+        {
+          "id": "c0web",
+          "title": "Website relaunch",
+          "notes": "Launch is the first of the month.\nCopy is waiting on feedback.",
+          "color": "teal",
+          "tasks": [
+            {
+              "id": "t0web1",
+              "text": "Design",
+              "done": false,
+              "subtasks": [
+                { "id": "s0web1a", "text": "Wireframes", "done": true },
+                { "id": "s0web1b", "text": "Colour palette", "done": true },
+                { "id": "s0web1c", "text": "Mobile layout", "done": false }
+              ]
+            },
+            {
+              "id": "t0web2",
+              "text": "Write the copy",
+              "done": false,
+              "subtasks": [
+                { "id": "s0web2a", "text": "Home page", "done": false },
+                { "id": "s0web2b", "text": "About page", "done": false }
+              ]
+            },
+            { "id": "t0web3", "text": "Buy the domain", "done": true, "subtasks": [] }
+          ]
+        },
+        {
+          "id": "c0bugs",
+          "title": "Bugs",
+          "notes": "",
+          "color": "red",
+          "tasks": [
+            { "id": "t0bug1", "text": "Login button does nothing on Safari", "done": false, "subtasks": [] },
+            { "id": "t0bug2", "text": "Typo on the pricing page", "done": true, "subtasks": [] }
+          ]
+        },
+        {
+          "id": "c0ideas",
+          "title": "Ideas",
+          "notes": "Nothing here is committed to.",
+          "color": "yellow",
+          "tasks": [
+            { "id": "t0idea1", "text": "Dark mode", "done": false, "subtasks": [] },
+            { "id": "t0idea2", "text": "Weekly email digest", "done": false, "subtasks": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b0home",
+      "name": "Home",
+      "cards": [
+        {
+          "id": "c0shop",
+          "title": "Shopping",
+          "notes": "",
+          "color": "pink",
+          "tasks": [
+            {
+              "id": "t0shop1",
+              "text": "Grocery store",
+              "done": false,
+              "subtasks": [
+                { "id": "s0shop1a", "text": "Milk", "done": false },
+                { "id": "s0shop1b", "text": "Eggs", "done": true },
+                { "id": "s0shop1c", "text": "Bread", "done": false }
+              ]
+            },
+            {
+              "id": "t0shop2",
+              "text": "Hardware store",
+              "done": false,
+              "subtasks": [
+                { "id": "s0shop2a", "text": "Light bulbs", "done": false },
+                { "id": "s0shop2b", "text": "Picture hooks", "done": false }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c0chores",
+          "title": "Chores",
+          "notes": "A card with no colour looks like this.",
+          "color": null,
+          "tasks": [
+            { "id": "t0chore1", "text": "Laundry", "done": false, "subtasks": [] },
+            { "id": "t0chore2", "text": "Water the plants", "done": true, "subtasks": [] },
+            { "id": "t0chore3", "text": "Take out the recycling", "done": false, "subtasks": [] }
+          ]
+        }
+      ]
+    }
+  ]
+}
