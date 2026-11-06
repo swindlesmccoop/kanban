@@ -83,6 +83,30 @@ app.post('/api/items/:id/move', (req, res) => {
   res.json(store.move(req.params.id, parentId, index));
 });
 
+// Integration API for other apps (Voice Notes). Names and titles match trimmed and
+// case-insensitively; tasks are keyed by the caller's own id (ext), unique per board.
+app.put('/api/v1/boards/by-name/:name', (req, res) => {
+  res.json(store.boardByName(req.params.name));
+});
+
+app.get('/api/v1/boards/:id', (req, res) => {
+  res.json(store.getBoard(req.params.id));
+});
+
+app.put('/api/v1/boards/:boardId/cards/by-title/:title', (req, res) => {
+  res.json(store.cardByTitle(req.params.boardId, req.params.title));
+});
+
+app.put('/api/v1/boards/:boardId/tasks/:ext', (req, res) => {
+  const result = store.upsertTask(req.params.boardId, req.params.ext, req.body);
+  res.status(result.created ? 201 : 200).json(result);
+});
+
+app.delete('/api/v1/boards/:boardId/tasks/:ext', (req, res) => {
+  store.removeTaskByExt(req.params.boardId, req.params.ext);
+  res.status(204).end();
+});
+
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'not found' });
 });

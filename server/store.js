@@ -62,6 +62,8 @@ function normalize(data) {
       item.text = String(item.text ?? '');
       item.done = Boolean(item.done);
     }
+    // ext is the id another app (Voice Notes) gave a task; only keep usable values.
+    if (level === 'task' && 'ext' in item && (typeof item.ext !== 'string' || !item.ext)) delete item.ext;
     if (children) {
       if (!Array.isArray(item[children])) item[children] = [];
       item[children].forEach((c) => fix(c, child));
@@ -238,8 +240,103 @@ function clearCompleted(cardId) {
   return commit();
 }
 
+// ---------- integration API (/api/v1) ----------
+// Small find-or-create and upsert helpers for other apps. They return just the item they
+// touched instead of the whole snapshot, and only save when something actually changed.
+
+const sameName = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
+function boardSummary(board) {
+  return { id: board.id, name: board.name, cards: board.cards.map((c) => ({ id: c.id, title: c.title })) };
+}
+
+function getBoard(id) {
+  return boardSummary(mustFind(id, 'board').item);
+}
+
+function boardByName(name) {
+  const clean = cleanText(name, 'name');
+  let board = state.boards.find((b) => sameName(b.name, clean));
+  if (!board) {
+    board = makeBoard(clean);
+    state.boards.push(board);
+    commit();
+  }
+  return boardSummary(board);
+}
+
+function cardByTitle(boardId, title) {
+  const { item: board } = mustFind(boardId, 'board');
+  const clean = cleanText(title, 'title');
+  let card = board.cards.find((c) => sameName(c.title, clean));
+  if (!card) {
+    card = { id: newId('card'), title: clean, notes: '', color: null, tasks: [] };
+    board.cards.push(card);
+    commit();
+  }
+  return { id: card.id, title: card.title };
+}
+
+function findExt(board, ext) {
+  for (const card of board.cards) {
+    const index = card.tasks.findIndex((t) => t.ext === ext);
+    if (index !== -1) return { card, index, task: card.tasks[index] };
+  }
+  return null;
+}
+
+// Creates or updates the task with this ext anywhere on the board. A task already in
+// cardId keeps its place and done state; one in another card moves to cardId at position.
+function upsertTask(boardId, ext, { cardId, text, position } = {}) {
+  const { item: board } = mustFind(boardId, 'board');
+  const key = cleanText(ext, 'ext');
+  if (typeof cardId !== 'string') throw new HttpError(400, 'cardId must be a string');
+  const card = board.cards.find((c) => c.id === cardId);
+  if (!card) throw new HttpError(404, 'card not found on this board');
+  const clean = cleanText(text, 'text');
+  if (position !== undefined && position !== 'top' && position !== 'bottom') {
+    throw new HttpError(400, "position must be 'top' or 'bottom'");
+  }
+  const insert = (task) => (position === 'top' ? card.tasks.unshift(task) : card.tasks.push(task));
+
+  const hit = findExt(board, key);
+  if (!hit) {
+    insert({ id: newId('task'), text: clean, done: false, subtasks: [], ext: key });
+    const task = card.tasks[position === 'top' ? 0 : card.tasks.length - 1];
+    commit();
+    return { id: task.id, ext: key, cardId: card.id, created: true };
+  }
+  let dirty = false;
+  if (hit.card !== card) {
+    hit.card.tasks.splice(hit.index, 1);
+    insert(hit.task);
+    dirty = true;
+  }
+  if (hit.task.text !== clean) {
+    hit.task.text = clean;
+    dirty = true;
+  }
+  if (dirty) commit();
+  return { id: hit.task.id, ext: key, cardId: card.id, created: false };
+}
+
+// Idempotent: deleting an ext that isn't there is fine. The board must exist, though.
+function removeTaskByExt(boardId, ext) {
+  const { item: board } = mustFind(boardId, 'board');
+  const hit = findExt(board, String(ext).trim());
+  if (!hit) return false;
+  hit.card.tasks.splice(hit.index, 1);
+  commit();
+  return true;
+}
+
 module.exports = {
   init,
+  getBoard,
+  boardByName,
+  cardByTitle,
+  upsertTask,
+  removeTaskByExt,
   snapshot,
   subscribe,
   addBoard,

@@ -53,3 +53,14 @@ Boards are stored in `data/kanban.json`. Order in the file is the order on scree
 You can edit it by hand while the app is running; it notices within a second or so and reloads. Missing ids and fields get filled in, so a new card can be as short as `{ "title": "Ideas" }`. If the file doesn't parse, the app logs why and keeps what it had until you fix it. Card colours are `red`, `orange`, `yellow`, `green`, `teal`, `blue`, `purple`, `pink` or `null`.
 
 To back up your boards, you only need to copy out the JSON file.
+
+## Integration API
+Other apps (e.g. Voice Notes, calling `http://kanban:4050` over `proxynet`) can file items with these JSON endpoints. Board names and card titles match trimmed and case-insensitively. Tasks are keyed by the caller's own id, stored on the task as `ext` and unique per board, so sending the same id twice never duplicates anything. If `APP_PASSWORD` is set, these need the login cookie like the rest of `/api`.
+
+- `PUT /api/v1/boards/by-name/:name` finds or creates a board and returns `{ id, name, cards: [{ id, title }] }`.
+- `GET /api/v1/boards/:id` returns the same shape.
+- `PUT /api/v1/boards/:boardId/cards/by-title/:title` finds or creates a card and returns `{ id, title }`. Rename it with `PATCH /api/items/:id` and `{ "title": "..." }`.
+- `PUT /api/v1/boards/:boardId/tasks/:ext` with `{ "cardId": "c...", "text": "...", "position": "top" | "bottom" }` creates the task (201) or updates it (200), returning `{ id, ext, cardId, created }`. A task already in that card keeps its place and done state and only gets new text; one in another card moves to `cardId` at `position`. `position` defaults to `bottom`.
+- `DELETE /api/v1/boards/:boardId/tasks/:ext` removes the task and returns 204, also when it's already gone.
+
+A missing board or card gives 404, bad input 400, both as `{ "error": "..." }`.
